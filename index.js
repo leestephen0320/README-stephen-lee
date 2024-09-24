@@ -1,6 +1,7 @@
 // TODO: Include packages needed for this application
 import inquirer from 'inquirer';
 import fs from 'fs';
+import generateMarkdown from './utils/generateMarkdown.js';
 
 // TODO: Create an array of questions for user input
 const questions = [
@@ -17,73 +18,11 @@ const questions = [
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {
-    // initialize badge image link
-    let badgeLink='';
-    // code to get image link for the badge for its resepctive license
-    switch(data.license) {
-        case 'Apache License 2.0':
-            badgeLink='[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)';
-            break;
-        case 'GNU General Public License v3.0':
-            badgeLink='[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)';
-            break;
-        case 'MIT License':
-            badgeLink='[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)';
-            break;
-        case 'ISC License':
-            badgeLink='[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)';
-            break;
-    }
-
+    
     //write file code first part is the name of the file
     fs.writeFile(`${fileName.toLowerCase().split(' ').join(' ')}.md`,
         // READ ME code goes here
-`
-# ${data.projectTitle}
-
-${badgeLink}
-
-## Description
-
-${data.description}
-
-## Table of Contents 
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [License](#license) ${badgeLink}
-- [Contributing](#contributing)
-- [Tests](#tests)
-- [Questions](#questions)
-
-## Installation
-
-${data.installation}
-
-## Usage
-
-${data.usage}
-
-## License
-
-Distributed under the ${data.license}. 
-
-## Contributing
-
-${data.contributing}
-
-## Tests
-
-${data.tests}
-
-## Questions
-
-GitHub profile: ${data.userGitHub}
-
-If you have any further questions, please contact me @ ${data.userEmail}
-
-
-`,
+        generateMarkdown(data),
         // error part
         (err) => 
             err ? console.error(err) : console.log('Success!') 
@@ -118,7 +57,7 @@ function init() {
                 type: 'list',
                 message: questions[4],
                 name: 'license',
-                choices: ['Apache License 2.0', 'GNU General Public License v3.0','MIT License','ISC License']
+                choices: ['Apache License 2.0', 'GNU General Public License v3.0','MIT License','ISC License','']
             },
             {
                 type: 'input',
